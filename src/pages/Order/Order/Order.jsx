@@ -4,7 +4,6 @@ import orderCover from '../../../assets/shop/banner2.jpg'
 import Cover from '../../../shared/Cover/Cover';
 import { useState } from 'react';
 import useMenu from '../../../Hooks/useMenu';
-import FoodCard from '../../../components/FoodCard';
 import OrderTab from '../OrderTab/OrderTab';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -17,13 +16,14 @@ const Order = () => {
     const [tabIndex, setTabIndex] = useState(initialIndex);
     const [menu] = useMenu();
     console.log(category);
+    console.log(menu)
 
     const desert = menu.filter(item => item.category === 'dessert');
     const soup = menu.filter(item => item.category === 'soup');
     const salad = menu.filter(item => item.category === 'salad');
     const pizza = menu.filter(item => item.category === 'pizza');
     const drinks = menu.filter(item => item.category === 'drinks');
-
+    console.log(desert, soup)
     return (
         <div>
             <Helmet>
