@@ -1,17 +1,48 @@
 import { Helmet } from "react-helmet";
 import useCart from "../../../Hooks/useCart";
 import { FaTrashAlt } from 'react-icons/fa';
+import Swal from "sweetalert2";
 
 
 
 const MyCart = () => {
-    const [cart] = useCart();
-    // console.log(cart.price);
+    const [cart, refetch] = useCart();
+
+    // how does reduce work?
     const total = cart.reduce((sum, item) => item.price + sum, 0);
+
+    const handleDelete = item => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              fetch(`http://localhost:5000/carts/${item._id}`, {
+                method: "DELETE"
+              })
+              .then(res => res.json())
+              .then(data => {
+                if(data.deletedCount > 0){
+                    refetch();
+                    Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                }
+              })
+            }
+          })
+    }
 
 
     return (
-        <div>
+        <div className="w-full">
             <Helmet>
                 <title>Bistro Boss | My Cart</title>
             </Helmet>
@@ -42,23 +73,22 @@ const MyCart = () => {
                         <td>
                             <div className="flex items-center space-x-3">
                                 <div className="mask mask-squircle w-12 h-12">
-                                    <img src={item.image} alt="Avatar Tailwind CSS Component" />
+                                    <img src={item.image} alt="food" />
                                 </div>
                             </div>
                         </td>
                         <td>{item.name}</td>
                         <td className="text-end">${item.price}</td>
                         <td>
-                        <button className="btn btn-ghost bg-orange-500 btn-lg"><FaTrashAlt/></button>
+                        <button onClick={() => handleDelete(item)} className="btn btn-ghost bg-orange-500 "><FaTrashAlt/></button>
                         </td>
                     </tr>)
                 }
                 
-                
                 </tbody>
                 
             </table>
-</div>
+            </div>
         </div>
     );
 };
