@@ -8,7 +8,7 @@ const img_hosting_token = import.meta.env.VITE_Image_Upload_token;
 const AddItem = () => {
     const [axiosSecure] = useAxiosSecure();
 
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, reset } = useForm();
     const img_hosting_url = `https://api.imgbb.com/1/upload?key=${img_hosting_token}`
   const onSubmit = data => {
     const formData = new FormData();
@@ -31,6 +31,7 @@ const AddItem = () => {
             .then(data => {
                 console.log('after posting new menu item', data.data)
                 if(data.data.insertedId){
+                    reset();
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
