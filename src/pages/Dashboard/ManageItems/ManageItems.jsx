@@ -1,5 +1,5 @@
 
-import { FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import SectionTitle from "../../../components/SectionTitle";
 import useMenu from "../../../Hooks/useMenu";
 import Swal from "sweetalert2";
@@ -69,6 +69,7 @@ const ManageItems = () => {
                             </td>
                             <td>{item.name}</td>
                             <td>{item.category}</td>
+                            <td><button className="btn btn-ghost bg-orange-600 text-white"><FaEdit/></button></td>
                             <td>
                             <button onClick={() => handleDelete(item)} className="btn btn-ghost bg-red-600 text-white"><FaTrash></FaTrash></button>
                             </td>
