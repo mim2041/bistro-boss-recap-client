@@ -1,11 +1,25 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { useEffect } from "react";
 import { useState } from "react";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import useAuth from "../../../Hooks/useAuth";
 
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ price }) => {
     const stripe = useStripe();
     const elements = useElements();
+    const [axiosSecure] = useAxiosSecure();
     const [cardError, setCardError] = useState('');
+    const [clientSecret, setClientSecret] = useState('');
+    const {user} = useAuth();
+
+    useEffect(() => {
+        axiosSecure.post('/create-payment-intent', {price})
+        .then(res => {
+            console.log(res.data.clientSecret);
+            setClientSecret(res.data.clientSecret);
+        })
+    } ,[price, axiosSecure])
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -32,7 +46,23 @@ const CheckoutForm = () => {
             setCardError('');
             console.log('payment method', paymentMethod);
         }
+        
+        const {paymentIntent, error: confirmError} = stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: card,
+                billing_details: {
+                    email: user?.email || 'unknown',
+                    name: user?.displayName || 'anonymous'
+                }
+            }
+        });
+    
+        if(confirmError){
+            console.log(confirmError);
+        }
+        console.log(paymentIntent);
     }
+
     
     return (
         <div className="w-2/3 m-8 mx-auto">
@@ -53,7 +83,7 @@ const CheckoutForm = () => {
                     },
                     }}
                 />
-                <button className="btn btn-outline btn-primary mt-4 btn-sm" type="submit" disabled={!stripe}>
+                <button className="btn btn-outline btn-primary mt-4 btn-sm" type="submit" disabled={!stripe || !clientSecret}>
                     Pay
                 </button>
             </form>
