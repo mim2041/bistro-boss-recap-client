@@ -3,16 +3,16 @@ import { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../providers/AuthProvider';
 
+const axiosSecure = axios.create({
+  baseURL: 'http://localhost:5000/',
+});
 
 const useAxiosSecure = () => {
   const navigate = useNavigate();
   const { logOut } = useContext(AuthContext);
 
 
-  const axiosSecure = axios.create({
-    baseURL: 'http://localhost:5000/',
-  });
-
+  
   useEffect(() => {
     axiosSecure.interceptors.request.use((config) => {
       const token = localStorage.getItem('access-token');
@@ -34,7 +34,7 @@ const useAxiosSecure = () => {
     );
 
     
-  }, [navigate, logOut, axiosSecure]);
+  }, [navigate, logOut]);
 
   return [axiosSecure];
 };
