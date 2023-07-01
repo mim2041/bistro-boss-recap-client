@@ -1,0 +1,11 @@
+.service{
+    background-image: url(../../../assets/home/chef-service.jpg);
+    background-repeat: no-repeat;
+    /* background-size: cover; */
+    background-position: center;
+}
+.inner-service{
+    /* background: white; */
+    margin: 40px 50px;
+    border: 2px solid white;
+}
